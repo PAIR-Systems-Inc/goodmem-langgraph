@@ -1,92 +1,101 @@
 # langgraph-goodmem
 
-[![PyPI](https://img.shields.io/pypi/v/langgraph-goodmem.svg)](https://pypi.org/project/langgraph-goodmem/)
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+Give LangGraph agents searchable, persistent memory with [GoodMem](https://goodmem.ai).
+GoodMem handles document storage, chunking, embedding, search, and optional reranking.
+Use it from a graph node or give an agent a search tool with access to the spaces you choose.
 
-LangGraph integration for [GoodMem](https://goodmem.ai) — long-term agent memory with semantic storage and retrieval.
+This package shares its tools, retriever, and ingestion functions with
+[langchain-goodmem](https://github.com/PAIR-Systems-Inc/goodmem-langchain), so fixes reach both integrations.
 
-GoodMem is a memory layer for AI agents that handles embedding, vector search, reranking, and LLM-powered answering server-side. This package exposes GoodMem operations as LangGraph tools that can be used with any LangGraph agent or graph.
-
-## Installation
+## Install
 
 ```bash
 pip install langgraph-goodmem
 ```
 
-Requires Python 3.10+.
+Requires Python 3.10+. Configure an existing GoodMem server and space:
 
-## Tools
-
-| Tool | Description |
-|---|---|
-| `GoodMemListEmbedders` | List available embedder models |
-| `GoodMemListSpaces` | List all spaces in your account |
-| `GoodMemGetSpace` | Fetch a specific space by ID |
-| `GoodMemCreateSpace` | Create a new space or reuse an existing one |
-| `GoodMemUpdateSpace` | Update a space's name or metadata |
-| `GoodMemDeleteSpace` | Delete a space and all of its memories |
-| `GoodMemCreateMemory` | Store text or files as memories |
-| `GoodMemListMemories` | List memories in a space |
-| `GoodMemGetMemory` | Fetch a specific memory by ID |
-| `GoodMemRetrieveMemories` | Semantic similarity search across spaces |
-| `GoodMemDeleteMemory` | Permanently delete a memory |
-
-## Quick start
-
-```python
-from langgraph_goodmem import (
-    GoodMemCreateSpace,
-    GoodMemCreateMemory,
-    GoodMemRetrieveMemories,
-)
-from langgraph.prebuilt import create_react_agent
-
-goodmem_kwargs = {
-    "goodmem_base_url": "http://localhost:8080",
-    "goodmem_api_key": "your-api-key",
-}
-
-tools = [
-    GoodMemCreateSpace(**goodmem_kwargs),
-    GoodMemCreateMemory(**goodmem_kwargs),
-    GoodMemRetrieveMemories(**goodmem_kwargs),
-]
-
-agent = create_react_agent(model="gpt-4o", tools=tools)
+```bash
+export GOODMEM_BASE_URL="https://your-goodmem-server.example.com"
+export GOODMEM_API_KEY="your-api-key"
+export GOODMEM_SPACE_ID="your-space-uuid"
 ```
 
-## Usage in a custom LangGraph graph
+## Search from a graph
+
+This complete example searches your space without an LLM. The retrieval node adds
+`Document` objects, including source metadata, to the graph's state.
 
 ```python
-from langgraph.graph import StateGraph, START, END
-from langgraph.prebuilt import ToolNode
-from langgraph_goodmem import (
-    GoodMemCreateSpace,
-    GoodMemCreateMemory,
-    GoodMemRetrieveMemories,
-)
+import os
+from typing import TypedDict
 
-tools = [
-    GoodMemCreateSpace(**goodmem_kwargs),
-    GoodMemCreateMemory(**goodmem_kwargs),
-    GoodMemRetrieveMemories(**goodmem_kwargs),
-]
+from langchain_core.documents import Document
+from langchain_core.runnables import RunnableConfig
+from langgraph.graph import END, START, StateGraph
+from langgraph_goodmem import GoodMemRetriever
 
-tool_node = ToolNode(tools)
+class State(TypedDict):
+    question: str
+    documents: list[Document]
+
+retriever = GoodMemRetriever(space_ids=[os.environ["GOODMEM_SPACE_ID"]], k=5)
+
+def search(state: State, config: RunnableConfig):
+    return {"documents": retriever.invoke(state["question"], config=config)}
+
+builder = StateGraph(State)
+builder.add_node("search", search)
+builder.add_edge(START, "search")
+builder.add_edge("search", END)
+graph = builder.compile()
+result = graph.invoke({"question": "What is the refund policy?", "documents": []})
+for document in result["documents"]:
+    print(document.metadata["source"], document.page_content, sep="\n")
 ```
 
-## Environment variables
+## Use an agent
 
-| Variable | Description |
-|---|---|
-| `GOODMEM_BASE_URL` | Base URL of the GoodMem API server |
-| `GOODMEM_API_KEY` | API key for authentication |
-| `GOODMEM_VERIFY_SSL` | Set to `false` to skip TLS verification for self-signed certs (default: `true`) |
+The [agent example](examples/react_agent_with_memory.py) gives `create_agent` a
+scoped search tool, also usable in `ToolNode`. Give searches distinct names and
+descriptions; your code controls their spaces, filters, and rerankers.
 
-## Example
+Install `langgraph-goodmem[agents]` plus your chosen model provider's LangChain
+package, configure its credentials, and set `GOODMEM_CHAT_MODEL=provider:model`.
 
-A full ReAct agent example is in [examples/react_agent_with_memory.py](examples/react_agent_with_memory.py).
+## Add documents
 
-## License
+```python
+import os
 
-MIT — see [LICENSE](LICENSE).
+from goodmem import Goodmem
+from langchain_core.documents import Document
+from langgraph_goodmem import add_documents
+
+with Goodmem(base_url=os.environ["GOODMEM_BASE_URL"],
+             api_key=os.environ["GOODMEM_API_KEY"]) as client:
+    memory_ids = add_documents(client, os.environ["GOODMEM_SPACE_ID"], [
+        Document(page_content="Refunds are available within 30 days.",
+                 metadata={"source": "https://example.com/refunds"})
+    ])
+```
+
+Ingestion waits for the memories it created. Empty searches return immediately.
+`GoodMemIngestionError.created_memory_ids` identifies accepted writes if indexing
+fails, so you can check them with `wait_for_memory` instead of uploading again.
+
+## More options
+
+- Set `filter="CAST(val('$.department') AS TEXT) = 'support'"` on the retriever for metadata filtering.
+- Set `reranker_id` and optionally `fetch_k` to rerank without an LLM.
+- Use `retriever.invoke`, `ainvoke`, `batch`, or `abatch` for `Document` results.
+  Async calls currently run the shared synchronous SDK in a thread executor.
+- Pass `client=Goodmem(...)` to share a connection. For local self-signed TLS,
+  use `Goodmem(..., verify=False)`; keep verification enabled in production.
+- Administrative tools remain available for trusted workflows. `GoodMemRetrieveMemories`
+  returns raw SDK events, including failure statuses; the scoped retriever reports
+  known failures as errors.
+
+This package provides retrieval and ingestion; it does not implement LangGraph's
+`BaseStore` or a checkpointer for graph execution state.
+See the [0.2 migration notes](CHANGELOG.md) for API changes.

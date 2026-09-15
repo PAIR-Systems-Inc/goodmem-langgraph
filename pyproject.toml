@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "langgraph-goodmem"
-version = "0.1.0"
+version = "0.2.0"
 description = "LangGraph integration for GoodMem: long-term agent memory with semantic storage and retrieval."
 license = "MIT"
 license-files = ["LICENSE"]
@@ -24,31 +24,30 @@ classifiers = [
 ]
 requires-python = ">=3.10.0,<4.0.0"
 dependencies = [
-    "langchain-core>=1.0.0,<2.0.0",
-    "httpx>=0.27.0,<1.0.0",
-    "pydantic>=2.7.4,<3.0.0",
+    "langchain-goodmem>=0.2.1,<0.3.0",
+    "langgraph>=1.0.0,<2.0.0",
 ]
+
+[project.optional-dependencies]
+agents = ["langchain>=1.0.0,<2.0.0"]
 
 [project.urls]
 Homepage = "https://github.com/PAIR-Systems-Inc/goodmem-langgraph"
 Repository = "https://github.com/PAIR-Systems-Inc/goodmem-langgraph"
-Documentation = "https://goodmem.ai/docs"
+Documentation = "https://docs.goodmem.ai/docs/integrations/agent-frameworks/langgraph/"
 Issues = "https://github.com/PAIR-Systems-Inc/goodmem-langgraph/issues"
 
 [dependency-groups]
 test = [
-    "pytest>=7.3.0,<8.0.0",
-    "pytest-mock>=3.10.0,<4.0.0",
-    "pytest-asyncio>=0.21.1,<1.0.0",
-    "pytest-socket>=0.6.0,<1.0.0",
-    "syrupy>=4.0.2,<5.0.0",
-    "langchain-core",
-]
-test_integration = [
+    "pytest>=8.0.0,<9.0.0",
+    "pytest-asyncio>=0.24.0,<2.0.0",
     "httpx>=0.27.0,<1.0.0",
+    "langchain>=1.0.0,<2.0.0",
+    "langchain-tests==1.1.6",
+    "python-dotenv>=1.0.0,<2.0.0",
+    "build>=1.0.0,<2.0.0",
 ]
 lint = ["ruff>=0.13.1,<0.14.0"]
-dev = ["langchain-core"]
 typing = [
     "mypy>=1.10.0,<2.0.0",
     "langchain-core",
@@ -56,6 +55,12 @@ typing = [
 
 [tool.hatch.build.targets.wheel]
 packages = ["langgraph_goodmem"]
+
+[tool.hatch.build.targets.sdist]
+only-include = [
+    "langgraph_goodmem", "tests", "examples", ".gitignore", "README.md",
+    "CHANGELOG.md", "LICENSE", "pyproject.toml", "uv.lock", "Makefile",
+]
 
 [tool.ruff.format]
 docstring-code-format = true
@@ -82,12 +87,13 @@ ignore_missing_imports = true
 omit = ["tests/*"]
 
 [tool.pytest.ini_options]
-addopts = "--strict-markers --strict-config --durations=5 -vv"
+addopts = "--strict-markers --strict-config --durations=5"
+testpaths = ["tests/unit_tests", "tests/integration_tests"]
 markers = [
-    "requires: mark tests as requiring a specific library",
-    "compile: mark placeholder test used to compile integration tests without running them",
+    "live: tests that create and delete resources on a configured GoodMem server",
 ]
 asyncio_mode = "auto"
+asyncio_default_fixture_loop_scope = "function"
 
 [tool.ruff.lint.extend-per-file-ignores]
 "tests/**/*.py" = [

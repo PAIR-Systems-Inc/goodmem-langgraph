@@ -1,43 +1,30 @@
-.PHONY: all format lint type test test_watch
+.PHONY: all test test_live lint format type build check
 
-# Default target
-all: lint format test
+UV_RUN = uv run --locked --all-groups --all-extras
 
-######################
-# TESTING AND COVERAGE
-######################
+all: check
 
-TEST ?= .
+check: lint type test build
 
+# Offline graph and framework tests; no server or model credentials required.
 test:
-	uv run pytest $(TEST)
+	$(UV_RUN) pytest --disable-socket --allow-unix-socket tests/unit_tests
 
-test_watch:
-	uv run ptw $(TEST)
+# Creates and deletes temporary spaces on the explicitly configured server.
+test_live:
+	$(UV_RUN) pytest tests/integration_tests
 
-######################
-# LINTING AND FORMATTING
-######################
+lint:
+	$(UV_RUN) ruff check .
+	$(UV_RUN) ruff format --check .
 
-# Define a variable for Python and notebook files.
-PYTHON_FILES=.
-MYPY_CACHE=.mypy_cache
-lint format: PYTHON_FILES=.
-lint_diff format_diff: PYTHON_FILES=$(shell git diff --name-only --relative --diff-filter=d main . | grep -E '\.py$$|\.ipynb$$')
-lint_package: PYTHON_FILES=langgraph_goodmem
-lint_tests: PYTHON_FILES=tests
-lint_tests: MYPY_CACHE=.mypy_cache_test
-
-lint lint_diff lint_package lint_tests:
-	uv run ruff check .
-	[ "$(PYTHON_FILES)" = "" ] || uv run ruff format $(PYTHON_FILES) --diff
-	[ "$(PYTHON_FILES)" = "" ] || uv run ruff check --select I $(PYTHON_FILES)
-	[ "$(PYTHON_FILES)" = "" ] || mkdir -p $(MYPY_CACHE)
-	[ "$(PYTHON_FILES)" = "" ] || uv run mypy $(PYTHON_FILES) --cache-dir $(MYPY_CACHE)
+format:
+	$(UV_RUN) ruff check --select I --fix .
+	$(UV_RUN) ruff format .
 
 type:
-	mkdir -p $(MYPY_CACHE) && uv run mypy $(PYTHON_FILES) --cache-dir $(MYPY_CACHE)
+	$(UV_RUN) mypy langgraph_goodmem examples
 
-format format_diff:
-	uv run ruff format $(PYTHON_FILES)
-	uv run ruff check --select I --fix $(PYTHON_FILES)
+build:
+	uv build
+	$(UV_RUN) pytest --disable-socket --allow-unix-socket tests/packaging_tests

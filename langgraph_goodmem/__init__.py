@@ -1,31 +1,44 @@
-"""LangGraph integration for GoodMem vector-based memory storage and retrieval."""
+"""GoodMem tools, retrieval and ingestion for LangGraph.
 
-from langgraph_goodmem._client import GoodMemClient
-from langgraph_goodmem.tools import (
+The implementations are shared with langchain-goodmem so SDK and framework fixes
+reach both integrations. LangGraph accepts these LangChain tools and retrievers
+directly; no additional client or graph adapter is needed.
+"""
+
+from langchain_goodmem import (
     GoodMemCreateMemory,
     GoodMemCreateSpace,
     GoodMemDeleteMemory,
     GoodMemDeleteSpace,
     GoodMemGetMemory,
     GoodMemGetSpace,
+    GoodMemIngestionError,
     GoodMemListEmbedders,
     GoodMemListMemories,
     GoodMemListSpaces,
+    GoodMemRetrievalError,
     GoodMemRetrieveMemories,
+    GoodMemRetriever,
     GoodMemUpdateSpace,
+    add_documents,
+    wait_for_memory,
 )
 
 __all__ = [
-    "GoodMemClient",
     "GoodMemCreateMemory",
     "GoodMemCreateSpace",
     "GoodMemDeleteMemory",
     "GoodMemDeleteSpace",
     "GoodMemGetMemory",
     "GoodMemGetSpace",
+    "GoodMemIngestionError",
     "GoodMemListEmbedders",
     "GoodMemListMemories",
     "GoodMemListSpaces",
+    "GoodMemRetrievalError",
     "GoodMemRetrieveMemories",
+    "GoodMemRetriever",
     "GoodMemUpdateSpace",
+    "add_documents",
+    "wait_for_memory",
 ]

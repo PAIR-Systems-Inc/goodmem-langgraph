@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "langgraph-goodmem"
-version = "0.2.0"
+version = "0.2.1"
 description = "LangGraph integration for GoodMem: long-term agent memory with semantic storage and retrieval."
 license = "MIT"
 license-files = ["LICENSE"]
@@ -24,7 +24,7 @@ classifiers = [
 ]
 requires-python = ">=3.10.0,<4.0.0"
 dependencies = [
-    "langchain-goodmem>=0.2.1,<0.3.0",
+    "langchain-goodmem>=0.2.3,<0.3.0",
     "langgraph>=1.0.0,<2.0.0",
 ]
 

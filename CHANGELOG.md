@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.2.1 — 2026-09-28
+
+Requires `langchain-goodmem` 0.2.3 or later. Earlier versions in the old range
+(0.2.1 and 0.2.2) send a model-supplied ID such as `../spaces/<id>` into the URL
+path, so `goodmem_delete_memory` could delete a whole space, and 0.2.2 and earlier
+let a model upload any local file. 0.2.3 refuses non-UUID IDs before any request
+and confines file uploads to an operator-set directory.
+
+`GoodMemRetriever` now returns the Documents it received when the server reports
+a problem, flagged with `goodmem_partial` and `goodmem_statuses` metadata, instead
+of raising `GoodMemRetrievalError`; with no Documents it returns an empty list and
+emits a warning.
+
 ## 0.2.0 — 2026-09-15
 
 LangGraph now uses the published `langchain-goodmem` implementations directly.

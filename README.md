@@ -93,8 +93,12 @@ fails, so you can check them with `wait_for_memory` instead of uploading again.
 - Pass `client=Goodmem(...)` to share a connection. For local self-signed TLS,
   use `Goodmem(..., verify=False)`; keep verification enabled in production.
 - Administrative tools remain available for trusted workflows. `GoodMemRetrieveMemories`
-  returns raw SDK events, including failure statuses; the scoped retriever reports
-  known failures as errors.
+  returns raw SDK events, including failure statuses. When the server reports a
+  problem, `GoodMemRetriever` still returns the Documents it received, each with
+  `goodmem_partial` and `goodmem_statuses` metadata; with no Documents it returns
+  an empty list and emits a warning. It does not raise.
+- Tools refuse any ID that is not a UUID before sending a request, so a
+  model-supplied ID cannot reach a different endpoint.
 
 This package provides retrieval and ingestion; it does not implement LangGraph's
 `BaseStore` or a checkpointer for graph execution state.

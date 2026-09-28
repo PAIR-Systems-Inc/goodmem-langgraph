@@ -13,7 +13,7 @@ from langchain_core.messages import AIMessage, ToolMessage
 from examples.react_agent_with_memory import build_agent
 from examples.retrieve_with_graph import build_graph
 from langgraph_goodmem import GoodMemIngestionError, GoodMemRetriever, add_documents
-from tests.unit_tests.conftest import CHUNK, MEMORY, Wire, ndjson
+from tests.unit_tests.conftest import CHUNK, MEMORY, MEMORY_ID, SPACE_ID, Wire, ndjson
 
 
 class RetrievalCallbacks(BaseCallbackHandler):
@@ -29,7 +29,7 @@ async def test_document_node_preserves_callbacks_and_metadata(
     wire: Wire, asynchronous: bool
 ) -> None:
     wire.responses.append(ndjson(CHUNK, {"memoryDefinition": MEMORY}))
-    graph = build_graph(GoodMemRetriever(client=wire.sdk, space_ids=["space-1"]))
+    graph = build_graph(GoodMemRetriever(client=wire.sdk, space_ids=[SPACE_ID]))
     callbacks = RetrievalCallbacks()
     config = {"callbacks": [callbacks]}
     state = {"question": "refund", "documents": []}
@@ -67,7 +67,7 @@ async def test_agent_example_completes_a_tool_call(
             AIMessage(content="Answer after retrieval."),
         ]
     )
-    agent = build_agent(model, GoodMemRetriever(client=wire.sdk, space_ids=["space-1"]))
+    agent = build_agent(model, GoodMemRetriever(client=wire.sdk, space_ids=[SPACE_ID]))
     state = {"messages": [{"role": "user", "content": "What is the refund policy?"}]}
     result = await agent.ainvoke(state) if asynchronous else agent.invoke(state)
     messages = [
@@ -75,7 +75,7 @@ async def test_agent_example_completes_a_tool_call(
     ]
     assert len(messages) == 1 and "30 days" in messages[0].content
     assert MEMORY["metadata"]["source"] in messages[0].content
-    assert messages[0].artifact[0].metadata["memory_id"] == "memory-1"
+    assert messages[0].artifact[0].metadata["memory_id"] == MEMORY_ID
     assert result["messages"][-1].content == "Answer after retrieval."
 
 
@@ -85,7 +85,7 @@ def test_readme_examples_run_independently(
 ) -> None:
     monkeypatch.setenv("GOODMEM_BASE_URL", "https://goodmem.test")
     monkeypatch.setenv("GOODMEM_API_KEY", "test-key")
-    monkeypatch.setenv("GOODMEM_SPACE_ID", "space-1")
+    monkeypatch.setenv("GOODMEM_SPACE_ID", SPACE_ID)
     if section == "Search from a graph":
         wire.responses.append(ndjson(CHUNK, {"memoryDefinition": MEMORY}))
     else:
@@ -112,7 +112,7 @@ def test_readme_examples_run_independently(
     if section == "Search from a graph":
         assert namespace["result"]["documents"][0].id == "chunk-1"
     else:
-        assert namespace["memory_ids"] == ["memory-1"]
+        assert namespace["memory_ids"] == [MEMORY_ID]
         assert [request.method for request in wire.requests] == ["POST", "GET"]
     assert all(
         request.url.host == "goodmem.test"
@@ -133,7 +133,7 @@ def test_documents_are_written_before_the_graph_searches(wire: Wire) -> None:
     )
     ids = add_documents(
         wire.sdk,
-        "space-1",
+        SPACE_ID,
         [
             Document(
                 page_content="Refunds are available within 30 days.",
@@ -142,12 +142,12 @@ def test_documents_are_written_before_the_graph_searches(wire: Wire) -> None:
         ],
     )
     result = build_graph(
-        GoodMemRetriever(client=wire.sdk, space_ids=["space-1"])
+        GoodMemRetriever(client=wire.sdk, space_ids=[SPACE_ID])
     ).invoke({"question": "refund", "documents": []})
     assert ids == [result["documents"][0].metadata["memory_id"]]
     assert [request.url.path for request in wire.requests] == [
         "/v1/memories:batchCreate",
-        "/v1/memories/memory-1",
+        f"/v1/memories/{MEMORY_ID}",
         "/v1/memories:retrieve",
     ]
 
@@ -164,6 +164,6 @@ def test_ingestion_wait_failure_keeps_created_ids(wire: Wire) -> None:
     )
     with pytest.raises(GoodMemIngestionError) as caught:
         add_documents(
-            wire.sdk, "space-1", [Document(page_content="note")], indexing_timeout=0
+            wire.sdk, SPACE_ID, [Document(page_content="note")], indexing_timeout=0
         )
-    assert caught.value.created_memory_ids == ["memory-1"]
+    assert caught.value.created_memory_ids == [MEMORY_ID]

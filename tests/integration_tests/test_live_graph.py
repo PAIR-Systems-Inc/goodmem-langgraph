@@ -153,7 +153,11 @@ def test_live_failed_reranking_is_visible(
     message = search_graph(client, sid, reranker_id=missing).invoke(question())[
         "messages"
     ][-1]
-    assert message.status == "error" and "RERANKING_FAILED" in message.content
+    # The server falls back to vector hits; they are returned and flagged.
+    assert message.status == "success" and message.artifact, message.content
+    for document in message.artifact:
+        assert document.metadata["goodmem_partial"] is True
+        assert "RERANKING_FAILED" in str(document.metadata["goodmem_statuses"])
     events = GoodMemRetrieveMemories(client=client).invoke(
         {"message": "refund policy", "space_ids": [sid], "reranker_id": missing}
     )

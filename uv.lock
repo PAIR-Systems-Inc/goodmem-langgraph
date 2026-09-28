@@ -332,16 +332,16 @@ wheels = [
 
 [[package]]
 name = "langchain-goodmem"
-version = "0.2.1"
+version = "0.2.3"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "goodmem" },
     { name = "langchain-core" },
     { name = "pydantic" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/d2/0e/5af15d74d0444114fec096106b72bb653cb1eed458886e5ae9231e7bd5c0/langchain_goodmem-0.2.1.tar.gz", hash = "sha256:d049ee6147d6c335a20da1446f9906655875167780f413364198b1aa0efefc15", size = 145478 }
+sdist = { url = "https://files.pythonhosted.org/packages/8e/f1/0499fc7f4cbdeb4d47c487e0323504d7d6bbffae0e2864b063f1fc9b5de2/langchain_goodmem-0.2.3.tar.gz", hash = "sha256:d268d124edb5c3c1a429d6e29352e74e59a5bcb9656797f9ed9e9788c116b134", size = 163329 }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/02/7b/c8c4d8b422c52bf93428d897024de8f17d4468e8859ecdbae5486e9474b9/langchain_goodmem-0.2.1-py3-none-any.whl", hash = "sha256:4b1b1bca2755cc92814853dcc2c615d3dbeb64dfe56cc77da81310017e52bd93", size = 19606 },
+    { url = "https://files.pythonhosted.org/packages/69/2a/7ceb9f89170a6ab8a49ec1fc4d5ec1466eef4010fb21b8a0bd43c81de12f/langchain_goodmem-0.2.3-py3-none-any.whl", hash = "sha256:c0be10db2dffcafcffdac873a5621dd936a23f1402a9857bd74383878d679060", size = 27445 },
 ]
 
 [[package]]
@@ -412,7 +412,7 @@ wheels = [
 
 [[package]]
 name = "langgraph-goodmem"
-version = "0.2.0"
+version = "0.2.1"
 source = { editable = "." }
 dependencies = [
     { name = "langchain-goodmem" },
@@ -445,7 +445,7 @@ typing = [
 [package.metadata]
 requires-dist = [
     { name = "langchain", marker = "extra == 'agents'", specifier = ">=1.0.0,<2.0.0" },
-    { name = "langchain-goodmem", specifier = ">=0.2.1,<0.3.0" },
+    { name = "langchain-goodmem", specifier = ">=0.2.3,<0.3.0" },
     { name = "langgraph", specifier = ">=1.0.0,<2.0.0" },
 ]
 provides-extras = ["agents"]

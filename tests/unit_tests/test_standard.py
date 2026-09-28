@@ -13,7 +13,7 @@ from langchain_tests.integration_tests import RetrieversIntegrationTests
 from langchain_tests.unit_tests import ToolsUnitTests
 
 from langgraph_goodmem import GoodMemRetrieveMemories, GoodMemRetriever
-from tests.unit_tests.conftest import CHUNK, MEMORY, ndjson
+from tests.unit_tests.conftest import CHUNK, MEMORY, SPACE_ID, ndjson
 
 
 class TestRetrievalTool(ToolsUnitTests):
@@ -23,7 +23,7 @@ class TestRetrievalTool(ToolsUnitTests):
 
     @property
     def tool_invoke_params_example(self) -> dict[str, Any]:
-        return {"message": "refund", "space_ids": ["space-1"]}
+        return {"message": "refund", "space_ids": [SPACE_ID]}
 
 
 class TestRetriever(RetrieversIntegrationTests):
@@ -42,7 +42,7 @@ class TestRetriever(RetrieversIntegrationTests):
         ) as http:
             self.parameters = {
                 "client": Goodmem(http_client=http),
-                "space_ids": ["space-1"],
+                "space_ids": [SPACE_ID],
             }
             yield
 

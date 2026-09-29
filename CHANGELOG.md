@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.3.0 — 2026-09-29
+
+Renamed to `goodmem-langgraph` (import `goodmem_langgraph`), the goodmem-<framework>
+naming used by goodmem-adk and goodmem-semantic-kernel. Breaking: update imports
+from `langgraph_goodmem` to `goodmem_langgraph`.
+
+The dependency follows the matching LangChain rename: it now requires
+`goodmem-langchain>=0.3.0,<0.4.0` (import `goodmem_langchain`).
+
 ## 0.2.1 — 2026-09-28
 
 Requires `langchain-goodmem` 0.2.3 or later. Earlier versions in the old range

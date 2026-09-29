@@ -12,7 +12,7 @@ from langchain_core.messages import AIMessage, ToolMessage
 
 from examples.react_agent_with_memory import build_agent
 from examples.retrieve_with_graph import build_graph
-from langgraph_goodmem import GoodMemIngestionError, GoodMemRetriever, add_documents
+from goodmem_langgraph import GoodMemIngestionError, GoodMemRetriever, add_documents
 from tests.unit_tests.conftest import CHUNK, MEMORY, MEMORY_ID, SPACE_ID, Wire, ndjson
 
 

@@ -15,7 +15,7 @@ from langchain_core.tools import create_retriever_tool
 from langgraph.graph import END, START, MessagesState, StateGraph
 from langgraph.prebuilt import ToolNode
 
-from langgraph_goodmem import (
+from goodmem_langgraph import (
     GoodMemCreateSpace,
     GoodMemDeleteSpace,
     GoodMemGetMemory,

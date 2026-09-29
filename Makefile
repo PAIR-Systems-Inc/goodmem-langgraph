@@ -23,7 +23,7 @@ format:
 	$(UV_RUN) ruff format .
 
 type:
-	$(UV_RUN) mypy langgraph_goodmem examples
+	$(UV_RUN) mypy goodmem_langgraph examples
 
 build:
 	uv build

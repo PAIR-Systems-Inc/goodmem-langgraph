@@ -1,16 +1,16 @@
-# langgraph-goodmem
+# goodmem-langgraph
 
 Give LangGraph agents searchable, persistent memory with [GoodMem](https://goodmem.ai).
 GoodMem handles document storage, chunking, embedding, search, and optional reranking.
 Use it from a graph node or give an agent a search tool with access to the spaces you choose.
 
 This package shares its tools, retriever, and ingestion functions with
-[langchain-goodmem](https://github.com/PAIR-Systems-Inc/goodmem-langchain), so fixes reach both integrations.
+[goodmem-langchain](https://github.com/PAIR-Systems-Inc/goodmem-langchain), so fixes reach both integrations.
 
 ## Install
 
 ```bash
-pip install langgraph-goodmem
+pip install goodmem-langgraph
 ```
 
 Requires Python 3.10+. Configure an existing GoodMem server and space:
@@ -33,7 +33,7 @@ from typing import TypedDict
 from langchain_core.documents import Document
 from langchain_core.runnables import RunnableConfig
 from langgraph.graph import END, START, StateGraph
-from langgraph_goodmem import GoodMemRetriever
+from goodmem_langgraph import GoodMemRetriever
 
 class State(TypedDict):
     question: str
@@ -60,7 +60,7 @@ The [agent example](examples/react_agent_with_memory.py) gives `create_agent` a
 scoped search tool, also usable in `ToolNode`. Give searches distinct names and
 descriptions; your code controls their spaces, filters, and rerankers.
 
-Install `langgraph-goodmem[agents]` plus your chosen model provider's LangChain
+Install `goodmem-langgraph[agents]` plus your chosen model provider's LangChain
 package, configure its credentials, and set `GOODMEM_CHAT_MODEL=provider:model`.
 
 ## Add documents
@@ -70,7 +70,7 @@ import os
 
 from goodmem import Goodmem
 from langchain_core.documents import Document
-from langgraph_goodmem import add_documents
+from goodmem_langgraph import add_documents
 
 with Goodmem(base_url=os.environ["GOODMEM_BASE_URL"],
              api_key=os.environ["GOODMEM_API_KEY"]) as client:

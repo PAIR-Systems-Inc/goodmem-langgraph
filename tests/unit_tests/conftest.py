@@ -9,7 +9,7 @@ import httpx
 import pytest
 from goodmem import Goodmem
 
-# GoodMem IDs are UUIDs; langchain-goodmem refuses anything else before a request.
+# GoodMem IDs are UUIDs; goodmem-langchain refuses anything else before a request.
 SPACE_ID = "00000000-0000-4000-8000-00000000a001"
 SPACE_ID_2 = "00000000-0000-4000-8000-00000000a002"
 MEMORY_ID = "00000000-0000-4000-8000-00000000b001"

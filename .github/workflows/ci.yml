@@ -23,7 +23,7 @@ jobs:
       - run: uv sync --locked --all-groups --all-extras
       - run: uv run --no-sync ruff check .
       - run: uv run --no-sync ruff format --check .
-      - run: uv run --no-sync mypy langgraph_goodmem examples
+      - run: uv run --no-sync mypy goodmem_langgraph examples
       - run: uv run --no-sync pytest --disable-socket --allow-unix-socket tests/unit_tests
       - run: uv build
       - run: uv run --no-sync pytest --disable-socket --allow-unix-socket tests/packaging_tests

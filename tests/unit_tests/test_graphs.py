@@ -11,7 +11,7 @@ from langchain_core.tools import BaseTool, create_retriever_tool
 from langgraph.graph import END, START, MessagesState, StateGraph
 from langgraph.prebuilt import ToolNode
 
-from langgraph_goodmem import (
+from goodmem_langgraph import (
     GoodMemCreateMemory,
     GoodMemCreateSpace,
     GoodMemDeleteMemory,
@@ -292,8 +292,8 @@ def test_update_schema_no_longer_advertises_public_read() -> None:
 def test_model_supplied_ids_cannot_reach_another_endpoint(
     wire: Wire, memory_id: str
 ) -> None:
-    # langchain-goodmem 0.2.1 and 0.2.2 sent DELETE /v1/spaces/<id> for the first
-    # id; the 0.2.3 floor refuses non-UUID ids before any request.
+    # The LangChain package's 0.2.1 and 0.2.2 releases sent DELETE /v1/spaces/<id>
+    # for the first id; 0.2.3 and later refuse non-UUID ids before any request.
     result = graph_for(GoodMemDeleteMemory(client=wire.sdk)).invoke(
         call("goodmem_delete_memory", {"memory_id": memory_id})
     )

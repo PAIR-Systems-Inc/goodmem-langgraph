@@ -1,6 +1,6 @@
 """GoodMem tools, retrieval and ingestion for LangGraph.
 
-The implementations are shared with langchain-goodmem so SDK and framework fixes
+The implementations are shared with goodmem-langchain so SDK and framework fixes
 reach both integrations. LangGraph accepts these LangChain tools and retrievers
 directly; no additional client or graph adapter is needed.
 """

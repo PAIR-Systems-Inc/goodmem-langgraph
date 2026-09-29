@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.2.2 — 2026-09-29
+
+The distribution is renamed from `langgraph-goodmem` to `goodmem-langgraph`: it
+moved into the PAIR Systems PyPI organisation under the `goodmem-<framework>`
+naming used by goodmem-adk and goodmem-semantic-kernel. `langgraph-goodmem` stays
+at 0.2.1. Imports are unchanged (`import langgraph_goodmem`). Both distributions
+ship the same `langgraph_goodmem` package, so run
+`pip uninstall -y langgraph-goodmem && pip install goodmem-langgraph`.
+
+The dependency follows the matching LangChain rename: it now requires
+`goodmem-langchain>=0.2.4,<0.3.0` (previously `langchain-goodmem>=0.2.3`), which
+ships the same `langchain_goodmem` import package.
+
 ## 0.2.1 — 2026-09-28
 
 Requires `langchain-goodmem` 0.2.3 or later. Earlier versions in the old range

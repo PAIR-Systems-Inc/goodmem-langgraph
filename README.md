@@ -1,16 +1,28 @@
-# langgraph-goodmem
+# goodmem-langgraph
 
 Give LangGraph agents searchable, persistent memory with [GoodMem](https://goodmem.ai).
 GoodMem handles document storage, chunking, embedding, search, and optional reranking.
 Use it from a graph node or give an agent a search tool with access to the spaces you choose.
 
 This package shares its tools, retriever, and ingestion functions with
-[langchain-goodmem](https://github.com/PAIR-Systems-Inc/goodmem-langchain), so fixes reach both integrations.
+[goodmem-langchain](https://github.com/PAIR-Systems-Inc/goodmem-langchain), so fixes reach both integrations.
+
+> **Renamed:** this package was previously published as `langgraph-goodmem`
+> (last version on the old name: 0.2.1). It moved into the PAIR Systems PyPI
+> organisation under the `goodmem-<framework>` naming used by goodmem-adk and
+> goodmem-semantic-kernel. The import name is unchanged: keep using
+> `from langgraph_goodmem import ...`. Both distributions ship the same
+> `langgraph_goodmem` package and would overwrite each other's files, so remove
+> the old one first:
+>
+> ```bash
+> pip uninstall -y langgraph-goodmem && pip install goodmem-langgraph
+> ```
 
 ## Install
 
 ```bash
-pip install langgraph-goodmem
+pip install goodmem-langgraph
 ```
 
 Requires Python 3.10+. Configure an existing GoodMem server and space:
@@ -60,7 +72,7 @@ The [agent example](examples/react_agent_with_memory.py) gives `create_agent` a
 scoped search tool, also usable in `ToolNode`. Give searches distinct names and
 descriptions; your code controls their spaces, filters, and rerankers.
 
-Install `langgraph-goodmem[agents]` plus your chosen model provider's LangChain
+Install `goodmem-langgraph[agents]` plus your chosen model provider's LangChain
 package, configure its credentials, and set `GOODMEM_CHAT_MODEL=provider:model`.
 
 ## Add documents

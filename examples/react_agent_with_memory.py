@@ -1,6 +1,6 @@
 """An agent that searches a configured GoodMem space and cites its sources.
 
-Install `langgraph-goodmem[agents]` and your model provider's LangChain package.
+Install `goodmem-langgraph[agents]` and your model provider's LangChain package.
 Set GOODMEM_BASE_URL, GOODMEM_API_KEY, GOODMEM_SPACE_ID, the provider's credentials,
 and GOODMEM_CHAT_MODEL to a provider:model identifier. For example, install
 langchain-anthropic, set ANTHROPIC_API_KEY and choose an anthropic:model identifier.

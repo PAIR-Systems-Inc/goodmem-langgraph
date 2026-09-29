@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "goodmem-langgraph"
-version = "0.2.2"
+version = "0.3.0"
 description = "LangGraph integration for GoodMem: long-term agent memory with semantic storage and retrieval."
 license = "MIT"
 license-files = ["LICENSE"]
@@ -24,7 +24,7 @@ classifiers = [
 ]
 requires-python = ">=3.10.0,<4.0.0"
 dependencies = [
-    "goodmem-langchain>=0.2.4,<0.3.0",
+    "goodmem-langchain>=0.3.0,<0.4.0",
     "langgraph>=1.0.0,<2.0.0",
 ]
 
@@ -54,11 +54,11 @@ typing = [
 ]
 
 [tool.hatch.build.targets.wheel]
-packages = ["langgraph_goodmem"]
+packages = ["goodmem_langgraph"]
 
 [tool.hatch.build.targets.sdist]
 only-include = [
-    "langgraph_goodmem", "tests", "examples", ".gitignore", "README.md",
+    "goodmem_langgraph", "tests", "examples", ".gitignore", "README.md",
     "CHANGELOG.md", "LICENSE", "pyproject.toml", "uv.lock", "Makefile",
 ]
 

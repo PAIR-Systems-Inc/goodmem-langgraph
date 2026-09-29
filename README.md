@@ -7,18 +7,6 @@ Use it from a graph node or give an agent a search tool with access to the space
 This package shares its tools, retriever, and ingestion functions with
 [goodmem-langchain](https://github.com/PAIR-Systems-Inc/goodmem-langchain), so fixes reach both integrations.
 
-> **Renamed:** this package was previously published as `langgraph-goodmem`
-> (last version on the old name: 0.2.1). It moved into the PAIR Systems PyPI
-> organisation under the `goodmem-<framework>` naming used by goodmem-adk and
-> goodmem-semantic-kernel. The import name is unchanged: keep using
-> `from langgraph_goodmem import ...`. Both distributions ship the same
-> `langgraph_goodmem` package and would overwrite each other's files, so remove
-> the old one first:
->
-> ```bash
-> pip uninstall -y langgraph-goodmem && pip install goodmem-langgraph
-> ```
-
 ## Install
 
 ```bash
@@ -45,7 +33,7 @@ from typing import TypedDict
 from langchain_core.documents import Document
 from langchain_core.runnables import RunnableConfig
 from langgraph.graph import END, START, StateGraph
-from langgraph_goodmem import GoodMemRetriever
+from goodmem_langgraph import GoodMemRetriever
 
 class State(TypedDict):
     question: str
@@ -82,7 +70,7 @@ import os
 
 from goodmem import Goodmem
 from langchain_core.documents import Document
-from langgraph_goodmem import add_documents
+from goodmem_langgraph import add_documents
 
 with Goodmem(base_url=os.environ["GOODMEM_BASE_URL"],
              api_key=os.environ["GOODMEM_API_KEY"]) as client:

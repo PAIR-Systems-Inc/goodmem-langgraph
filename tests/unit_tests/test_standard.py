@@ -12,7 +12,7 @@ from langchain_core.tools import BaseTool
 from langchain_tests.integration_tests import RetrieversIntegrationTests
 from langchain_tests.unit_tests import ToolsUnitTests
 
-from langgraph_goodmem import GoodMemRetrieveMemories, GoodMemRetriever
+from goodmem_langgraph import GoodMemRetrieveMemories, GoodMemRetriever
 from tests.unit_tests.conftest import CHUNK, MEMORY, SPACE_ID, ndjson
 
 

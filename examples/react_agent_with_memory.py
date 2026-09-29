@@ -15,7 +15,7 @@ from langchain_core.language_models import BaseChatModel
 from langchain_core.prompts import PromptTemplate
 from langchain_core.tools import create_retriever_tool
 
-from langgraph_goodmem import GoodMemRetriever
+from goodmem_langgraph import GoodMemRetriever
 
 
 def build_agent(model: str | BaseChatModel, retriever: GoodMemRetriever) -> Any:

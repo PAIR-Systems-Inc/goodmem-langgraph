@@ -11,7 +11,7 @@ from langchain_core.documents import Document
 from langchain_core.runnables import RunnableConfig, RunnableLambda
 from langgraph.graph import END, START, StateGraph
 
-from langgraph_goodmem import GoodMemRetriever
+from goodmem_langgraph import GoodMemRetriever
 
 
 class SearchState(TypedDict):

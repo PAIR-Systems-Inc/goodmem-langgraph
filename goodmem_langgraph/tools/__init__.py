@@ -1,27 +1,17 @@
-"""GoodMem tools, retrieval and ingestion for LangGraph.
+"""GoodMem tools shared with the LangChain integration."""
 
-The implementations are shared with goodmem-langchain so SDK and framework fixes
-reach both integrations. LangGraph accepts these LangChain tools and retrievers
-directly; no additional client or graph adapter is needed.
-"""
-
-from langchain_goodmem import (
+from goodmem_langchain.tools import (
     GoodMemCreateMemory,
     GoodMemCreateSpace,
     GoodMemDeleteMemory,
     GoodMemDeleteSpace,
     GoodMemGetMemory,
     GoodMemGetSpace,
-    GoodMemIngestionError,
     GoodMemListEmbedders,
     GoodMemListMemories,
     GoodMemListSpaces,
-    GoodMemRetrievalError,
     GoodMemRetrieveMemories,
-    GoodMemRetriever,
     GoodMemUpdateSpace,
-    add_documents,
-    wait_for_memory,
 )
 
 __all__ = [
@@ -31,14 +21,9 @@ __all__ = [
     "GoodMemDeleteSpace",
     "GoodMemGetMemory",
     "GoodMemGetSpace",
-    "GoodMemIngestionError",
     "GoodMemListEmbedders",
     "GoodMemListMemories",
     "GoodMemListSpaces",
-    "GoodMemRetrievalError",
     "GoodMemRetrieveMemories",
-    "GoodMemRetriever",
     "GoodMemUpdateSpace",
-    "add_documents",
-    "wait_for_memory",
 ]

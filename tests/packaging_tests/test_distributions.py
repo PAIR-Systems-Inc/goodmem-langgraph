@@ -12,16 +12,16 @@ def test_distribution_contains_only_the_shared_entry_points(tmp_path: Path) -> N
     with zipfile.ZipFile(wheel) as archive:
         sources = {name for name in archive.namelist() if name.endswith(".py")}
         assert sources == {
-            "langgraph_goodmem/__init__.py",
-            "langgraph_goodmem/tools/__init__.py",
+            "goodmem_langgraph/__init__.py",
+            "goodmem_langgraph/tools/__init__.py",
         }
-        assert "langgraph_goodmem/py.typed" in archive.namelist()
+        assert "goodmem_langgraph/py.typed" in archive.namelist()
         archive.extractall(tmp_path)
     code = (
         "import pathlib,sys; sys.path.insert(0,sys.argv[1]); "
-        "import langgraph_goodmem,langchain_goodmem; "
-        "assert pathlib.Path(langgraph_goodmem.__file__).is_relative_to(sys.argv[1]); "
-        "assert langgraph_goodmem.GoodMemRetriever is langchain_goodmem.GoodMemRetriever"
+        "import goodmem_langgraph,goodmem_langchain; "
+        "assert pathlib.Path(goodmem_langgraph.__file__).is_relative_to(sys.argv[1]); "
+        "assert goodmem_langgraph.GoodMemRetriever is goodmem_langchain.GoodMemRetriever"
     )
     subprocess.run(
         [sys.executable, "-I", "-c", code, str(tmp_path)], cwd=tmp_path, check=True
